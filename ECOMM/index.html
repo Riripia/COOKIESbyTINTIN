@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cookie ni Tintin</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>Cookie ni Tintin</h1>
+    <p>Freshly baked Cookies made with love</p>
+  </header>
+
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Menu</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+    <a href="#" id="login-link">Login</a>
+    <a href="#" id="register-link">Register</a>
+  </nav>
+
+  <section class="hero">
+    <h2>Sweet Moments Start Here</h2>
+    <p>Delight in our handcrafted Cookies baked fresh daily.</p>
+  </section>
+
+  <main class="container">
+    <div class="products">
+      <div class="card">
+        <h3>Chocolate chip Cookies</h3>
+        <p>Chocolate chip Cookies</p>
+        <span class="price">₱120</span>
+        <button onclick="order('Chocolate chip Cookies')">Order Now</button>
+      </div>
+
+      <div class="card">
+        <h3>Matcha Cookies</h3>
+        <p>Chocolate chip Cookies</p>
+        <span class="price">₱180</span>
+        <button onclick="order('Matcha Cookies')">Order Now</button>
+      </div>
+
+      <div class="card">
+        <h3>Chocolate chip Cookies</h3>
+        <p>Chocolate chip Cookies</p>
+        <span class="price">₱250</span>
+        <button onclick="order('Chocolate chip Cookies')">Order Now</button>
+      </div>
+
+      <div class="card">
+        <h3>Chocolate chip Cookies</h3>
+        <p>Chocolate chip Cookies</p>
+        <span class="price">₱90</span>
+        <button onclick="order('Chocolate chip Cookies')">Order Now</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    © 2026 SugarCloud Pastry Bakeshop
+  </footer>
+
+  <!-- Login Modal -->
+  <div id="login-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="login-close">&times;</span>
+      <h2>Login</h2>
+      <form id="login-form">
+        <input type="email" id="login-email" placeholder="Email" required>
+        <input type="password" id="login-password" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div id="register-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="register-close">&times;</span>
+      <h2>Register</h2>
+      <form id="register-form">
+        <input type="text" id="register-username" placeholder="Username" required>
+        <input type="email" id="register-email" placeholder="Email" required>
+        <input type="password" id="register-password" placeholder="Password" required>
+        <button type="submit">Register</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Cart Modal -->
+  <div id="cart-modal" class="modal">
+    <div class="modal-content cart-modal">
+      <span class="close" id="cart-close">&times;</span>
+      <h2>Your Cart</h2>
+      <div id="cart-items"></div>
+      <div id="cart-total">Total: ₱0</div>
+      <button id="checkout-btn" class="checkout-btn">Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div id="checkout-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="checkout-close">&times;</span>
+      <h2>Checkout</h2>
+      <form id="checkout-form">
+        <input type="text" id="delivery-name" placeholder="Full Name" required>
+        <input type="text" id="delivery-address" placeholder="Delivery Address" required>
+        <input type="tel" id="delivery-phone" placeholder="Phone Number" required>
+        <input type="email" id="delivery-email" placeholder="Email" required>
+        <div id="checkout-total">Total: ₱0</div>
+        <button type="submit" class="checkout-submit-btn">Place Order</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+
