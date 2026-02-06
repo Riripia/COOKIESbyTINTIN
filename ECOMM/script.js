@@ -24,16 +24,6 @@ registerClose.onclick = function() {
   registerModal.style.display = 'none';
 }
 
-// Close modal when clicking outside
-window.onclick = function(event) {
-  if (event.target == loginModal) {
-    loginModal.style.display = 'none';
-  }
-  if (event.target == registerModal) {
-    registerModal.style.display = 'none';
-  }
-}
-
 // Form handling
 document.getElementById('login-form').addEventListener('submit', function(e) {
   e.preventDefault();
@@ -91,20 +81,15 @@ function updateNavForLoggedInUser() {
   }
 }
 
-// Check if user is already logged in on page load
-window.onload = function() {
-  updateNavForLoggedInUser();
-}
-
 // Cart functionality
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-// Product prices
+// Product prices - Updated to match the new product names
 const productPrices = {
-  'Chocolate chip Cookies': 120,
+  'Chocolate Chip Cookies': 120,
   'Matcha Cookies': 180,
-  'Chocolate chip Cookies': 250,
-  'Chocolate chip Cookies': 90
+  'Double Chocolate Cookies': 250,
+  'Oatmeal Raisin Cookies': 90
 };
 
 // Update cart display
