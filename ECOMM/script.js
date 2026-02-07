@@ -258,3 +258,12 @@ window.onload = function() {
   updateCartDisplay();
   updateNavForLoggedInUser();
 }
+
+
+//humberger menu 
+const hamMenu = document.querySelector('.menuBar');
+const offScreenMenu = document.querySelector('.off-screen-menu');
+hamMenu.addEventListener('click', () => {
+  hamMenu.classList.toggle('active');
+  offScreenMenu.classList.toggle('active');
+});
