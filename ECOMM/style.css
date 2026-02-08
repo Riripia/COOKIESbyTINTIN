@@ -290,6 +290,8 @@ footer {
   text-align: center;
   margin: 20px 0;
   color: #2563eb;
+<<<<<<< HEAD
+=======
 }
 
 /* Custom Alert Styles */
@@ -363,4 +365,5 @@ footer {
 
 .modal-link a:hover {
   text-decoration: underline;
+>>>>>>> d42c5d3f8c52a063ff0857b5117aa455ea891eb2
 }
