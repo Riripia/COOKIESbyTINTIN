@@ -5,6 +5,26 @@ const loginLink = document.getElementById('login-link');
 const registerLink = document.getElementById('register-link');
 const loginClose = document.getElementById('login-close');
 const registerClose = document.getElementById('register-close');
+const alertModal = document.getElementById('alert-modal');
+const alertBtn = document.getElementById('alert-btn');
+
+// Custom Alert Function
+function showAlert(message, title = 'Alert') {
+  document.getElementById('alert-title').textContent = title;
+  document.getElementById('alert-message').textContent = message;
+  alertModal.style.display = 'block';
+}
+
+alertBtn.onclick = function() {
+  alertModal.style.display = 'none';
+}
+
+// Close alert when clicking outside
+window.addEventListener('click', function(event) {
+  if (event.target == alertModal) {
+    alertModal.style.display = 'none';
+  }
+});
 
 // Open modals
 loginLink.onclick = function() {
@@ -31,17 +51,34 @@ document.getElementById('login-form').addEventListener('submit', function(e) {
   const password = document.getElementById('login-password').value;
 
   const users = JSON.parse(localStorage.getItem('users')) || [];
+  
+  if (users.length === 0) {
+    showAlert('No users registered yet. Please register first!', 'No Users');
+    loginModal.style.display = 'none';
+    registerModal.style.display = 'block';
+    return;
+  }
+  
+  const emailExists = users.find(u => u.email === email);
+  if (!emailExists) {
+    showAlert('Email not found! Please register first.', 'Email Not Found');
+    loginModal.style.display = 'none';
+    registerModal.style.display = 'block';
+    return;
+  }
+  
   const user = users.find(u => u.email === email && u.password === password);
 
   if (user) {
     localStorage.setItem('currentUser', JSON.stringify(user));
-    alert('Login successful! Welcome back, ' + user.username + '!');
+    showAlert('Login successful! Welcome back, ' + user.username + '!', 'Login Successful');
     loginModal.style.display = 'none';
     updateNavForLoggedInUser();
   } else {
-    alert('Invalid email or password!');
-  }
+    showAlert('Wrong password!', 'Error');
+  } 
 });
+
 
 document.getElementById('register-form').addEventListener('submit', function(e) {
   e.preventDefault();
@@ -53,7 +90,7 @@ document.getElementById('register-form').addEventListener('submit', function(e) 
   const existingUser = users.find(u => u.email === email);
 
   if (existingUser) {
-    alert('Email already registered!');
+    showAlert('Email already registered!', 'Registration Error');
     return;
   }
 
@@ -61,7 +98,7 @@ document.getElementById('register-form').addEventListener('submit', function(e) 
   users.push(newUser);
   localStorage.setItem('users', JSON.stringify(users));
 
-  alert('Registration successful! Please login.');
+  showAlert('Registration successful! Please login.', 'Registration Successful');
   registerModal.style.display = 'none';
   loginModal.style.display = 'block';
 });
@@ -130,7 +167,7 @@ function updateCartDisplay() {
 function addToCart(productName) {
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
   if (!currentUser) {
-    alert('Please login to add items to cart!');
+    showAlert('Please login to add items to cart!', 'Login Required');
     loginModal.style.display = 'block';
     return;
   }
@@ -146,7 +183,7 @@ function addToCart(productName) {
 
   localStorage.setItem('cart', JSON.stringify(cart));
   updateCartDisplay();
-  alert(`${productName} added to cart!`);
+  showAlert(productName + ' added to cart!', 'Added to Cart');
 }
 
 // Update quantity
@@ -189,7 +226,7 @@ const checkoutClose = document.getElementById('checkout-close');
 
 checkoutBtn.onclick = function() {
   if (cart.length === 0) {
-    alert('Your cart is empty!');
+    showAlert('Your cart is empty!', 'Empty Cart');
     return;
   }
   const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -227,7 +264,7 @@ document.getElementById('checkout-form').addEventListener('submit', function(e) 
   cart = [];
   localStorage.setItem('cart', JSON.stringify(cart));
 
-  alert('Order placed successfully! Thank you for your purchase.');
+  showAlert('Order placed successfully! Thank you for your purchase.', 'Order Confirmed');
   checkoutModal.style.display = 'none';
   updateCartDisplay();
 });

@@ -315,3 +315,57 @@ footer {
   margin: 20px 0;
   color: #2563eb;
 }
+
+/* Custom Alert Styles */
+#alert-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+
+#alert-modal .modal-content {
+  background-color: #fefefe;
+  margin: 20% auto;
+  padding: 30px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 350px;
+  border-radius: 18px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+#alert-title {
+  color: #be185d;
+  margin-bottom: 15px;
+  font-size: 24px;
+}
+
+#alert-message {
+  color: #1e3a8a;
+  margin-bottom: 20px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.alert-btn {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #f472b6, #60a5fa);
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  width: 100%;
+}
+
+.alert-btn:hover {
+  opacity: 0.9;
+}
