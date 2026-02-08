@@ -11,13 +11,25 @@ body {
 }
 
 header {
-  background-image: url('cookies5.jpg');
+  background: linear-gradient(135deg, #f472b6, #60a5fa), url('src/cookies5.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  padding: 90px;
+  padding: 25px;
   text-align: center;
-  color: rgb(57, 39, 97);
+  color: white;
+}
+.title{
+  background-image: url('src/title\ white2.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  height: 200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .off-screen-menu {
@@ -62,10 +74,10 @@ nav a:hover {
 }
 
 .hero {
+  background-color: #ffefff;
   padding: 60px 20px;
   text-align: center;
-  color: white;
-  text-shadow: black 0.1em 0.1em 0.2em;
+  color: #1e3a8a;
 }
 
 .container {
