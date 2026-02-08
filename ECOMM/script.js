@@ -35,6 +35,13 @@ registerLink.onclick = function() {
   registerModal.style.display = 'block';
 }
 
+// Redirect from login to register
+document.getElementById('login-to-register').onclick = function(e) {
+  e.preventDefault();
+  loginModal.style.display = 'none';
+  registerModal.style.display = 'block';
+}
+
 // Close modals
 loginClose.onclick = function() {
   loginModal.style.display = 'none';
@@ -211,6 +218,12 @@ const cartLink = document.getElementById('cart-link');
 const cartClose = document.getElementById('cart-close');
 
 cartLink.onclick = function() {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  if (!currentUser) {
+    showAlert('Please login to view your cart!', 'Login Required');
+    loginModal.style.display = 'block';
+    return;
+  }
   updateCartDisplay();
   cartModal.style.display = 'block';
 }
@@ -295,12 +308,3 @@ window.onload = function() {
   updateCartDisplay();
   updateNavForLoggedInUser();
 }
-
-
-//humberger menu 
-const hamMenu = document.querySelector('.menuBar');
-const offScreenMenu = document.querySelector('.off-screen-menu');
-hamMenu.addEventListener('click', () => {
-  hamMenu.classList.toggle('active');
-  offScreenMenu.classList.toggle('active');
-});
