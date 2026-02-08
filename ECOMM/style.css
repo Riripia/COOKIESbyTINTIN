@@ -11,10 +11,13 @@ body {
 }
 
 header {
-  background: linear-gradient(135deg, #f472b6, #60a5fa);
-  padding: 25px;
+  background-image: url('cookies5.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 90px;
   text-align: center;
-  color: white;
+  color: rgb(57, 39, 97);
 }
 
 .off-screen-menu {
@@ -40,10 +43,6 @@ header {
   background-color: rgb(34, 37, 49);
 }
 
-
-
-
-
 nav {
   background-color: #fde2f3;
   padding: 12px;
@@ -63,10 +62,6 @@ nav a:hover {
 }
 
 .hero {
-  background-image: url('cookies2.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   padding: 60px 20px;
   text-align: center;
   color: white;
