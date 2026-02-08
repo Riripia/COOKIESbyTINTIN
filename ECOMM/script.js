@@ -283,20 +283,20 @@ document.getElementById('checkout-form').addEventListener('submit', function(e) 
 });
 
 // Close modal when clicking outside
-window.onclick = function(event) {
-  if (event.target == loginModal) {
-    loginModal.style.display = 'none';
-  }
-  if (event.target == registerModal) {
-    registerModal.style.display = 'none';
-  }
-  if (event.target == cartModal) {
-    cartModal.style.display = 'none';
-  }
-  if (event.target == checkoutModal) {
-    checkoutModal.style.display = 'none';
-  }
-}
+// window.onclick = function(event) {
+//   if (event.target == loginModal) {
+//     loginModal.style.display = 'none';
+//   }
+//   if (event.target == registerModal) {
+//     registerModal.style.display = 'none';
+//   }
+//   if (event.target == cartModal) {
+//     cartModal.style.display = 'none';
+//   }
+//   if (event.target == checkoutModal) {
+//     checkoutModal.style.display = 'none';
+//   }
+// }
 
 // Update order function to add to cart instead
 function order(item) {
