@@ -18,13 +18,14 @@ header {
 }
 
 .off-screen-menu {
-  background-color: rgb(34, 37, 49);
+  background-color: (rgb)(34, 37, 49);  
   height: 100vh;
   width: 100%;
   max-width: 450px;
   position: fixed;
   top: 0;
-  right: -450px;
+  left: -450px;
+  right: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -34,12 +35,14 @@ header {
 }
 
 .off-screen-menu.active {
-  right: 0;
+  left: 0;
+  right: auto;
+  background-color: rgb(34, 37, 49);
 }
 .nav {
   padding: 1rem;  
   display: flex;
-  background-color: rgb(34, 37, 49);
+  /*background-color: rgb(34, 37, 49); */
 }
 .menuBar{
   height: 50px;
