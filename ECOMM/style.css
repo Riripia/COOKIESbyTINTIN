@@ -69,7 +69,8 @@ nav a:hover {
   background-repeat: no-repeat;
   padding: 60px 20px;
   text-align: center;
-  background-color: #eff6ff;
+  color: white;
+  text-shadow: black 0.1em 0.1em 0.2em;
 }
 
 .container {
