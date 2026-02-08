@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cookie ni Tintin</title>
+  <title>Tintin Cookies</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
   <header>
-    <h1>Cookie ni Tintin</h1>
+    <h1>Tin tin's Cookies!</h1>
     <p>Freshly baked Cookies made with love</p>
   </header>
 
@@ -38,6 +38,7 @@
       </div>
 
       <div class="card">
+        <img src="matcha cookie.jpg" alt="Matcha Cookies" class="card-image">
         <h3>Matcha Cookies</h3>
         <p>Premium green tea flavored cookies</p>
         <span class="price">₱180</span>
@@ -45,6 +46,7 @@
       </div>
 
       <div class="card">
+        <img src="double chocolate cookie.jpg" alt="Double Chocolate Cookies" class="card-image">
         <h3>Double Chocolate Cookies</h3>
         <p>Extra chocolatey with cocoa and chips</p>
         <span class="price">₱250</span>
@@ -52,6 +54,10 @@
       </div>
 
       <div class="card">
+<<<<<<< HEAD
+=======
+        <img src="oatmeal raisin cookie.jpg" alt="Oatmeal Raisin Cookies" class="card-image">
+>>>>>>> d42c5d3f8c52a063ff0857b5117aa455ea891eb2
         <h3>Oatmeal Raisin Cookies</h3>
         <p>Healthy and delicious oat cookies</p>
         <span class="price">₱90</span>
@@ -61,7 +67,11 @@
   </main>
 
   <footer>
+<<<<<<< HEAD
     © 2026 Cookie ni Tintin
+=======
+    © 2026 Tintin Cookies. All rights reserved.
+>>>>>>> d42c5d3f8c52a063ff0857b5117aa455ea891eb2
   </footer>
 
   <!-- Login Modal -->
@@ -73,6 +83,7 @@
         <input type="email" id="login-email" placeholder="Email" required>
         <input type="password" id="login-password" placeholder="Password" required>
         <button type="submit">Login</button>
+        <p class="modal-link">No account yet? <a href="#" id="login-to-register">Register here</a></p>
       </form>
     </div>
   </div>
@@ -115,6 +126,15 @@
         <div id="checkout-total">Total: ₱0</div>
         <button type="submit" class="checkout-submit-btn">Place Order</button>
       </form>
+    </div>
+  </div>
+
+  <!-- Custom Alert Modal -->
+  <div id="alert-modal" class="modal">
+    <div class="modal-content">
+      <h2 id="alert-title">Alert</h2>
+      <p id="alert-message"></p>
+      <button id="alert-btn" class="alert-btn">OK</button>
     </div>
   </div>
 
