@@ -11,7 +11,7 @@ body {
 }
 
 header {
-  background: linear-gradient(135deg, #f472b6, #60a5fa), url('src/cookies5.jpg');
+  background: linear-gradient(135deg, #f472b6, #60a5fa), url('../cookie-ni-tintin/src/cookie/cookies5.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -20,7 +20,7 @@ header {
   color: white;
 }
 .title{
-  background-image: url('src/title\ white2.png');
+  background-image: url('../cookie-ni-tintin/src/cookie/title\ white2.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -351,6 +351,10 @@ footer {
 
 .alert-btn:hover {
   opacity: 0.9;
+}
+
+#confirm-message {
+  margin-bottom: 4px;
 }
 
 /* Modal Link Styles */

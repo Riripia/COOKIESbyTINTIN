@@ -7,6 +7,10 @@ const loginClose = document.getElementById('login-close');
 const registerClose = document.getElementById('register-close');
 const alertModal = document.getElementById('alert-modal');
 const alertBtn = document.getElementById('alert-btn');
+const confirmModal = document.getElementById('confirm-modal');
+const confirmOkBtn = document.getElementById('confirm-ok-btn');
+const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
+let confirmCallback = null;
 
 // Custom Alert Function
 function showAlert(message, title = 'Alert') {
@@ -17,6 +21,26 @@ function showAlert(message, title = 'Alert') {
 
 alertBtn.onclick = function() {
   alertModal.style.display = 'none';
+}
+
+// Custom Confirm Function
+function showConfirm(message, title = 'Confirm', callback) {
+  document.getElementById('confirm-title').textContent = title;
+  document.getElementById('confirm-message').textContent = message;
+  confirmCallback = callback;
+  confirmModal.style.display = 'block';
+}
+
+confirmOkBtn.onclick = function() {
+  confirmModal.style.display = 'none';
+  if (confirmCallback) {
+    confirmCallback();
+  }
+}
+
+confirmCancelBtn.onclick = function() {
+  confirmModal.style.display = 'none';
+  confirmCallback = null;
 }
 
 // Close alert when clicking outside
@@ -116,10 +140,10 @@ function updateNavForLoggedInUser() {
   if (currentUser) {
     loginLink.textContent = 'Welcome, ' + currentUser.username;
     loginLink.onclick = function() {
-      if (confirm('Logout?')) {
+      showConfirm('Are you sure you want to logout?', 'Logout', function() {
         localStorage.removeItem('currentUser');
         location.reload();
-      }
+      });
     };
     registerLink.style.display = 'none';
   }
