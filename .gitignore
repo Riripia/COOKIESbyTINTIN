@@ -1,0 +1,18 @@
+# Node modules
+node_modules/
+
+# Ignore nested node_modules
+**/node_modules/
+
+# Environment files
+.env
+
+# OS files
+.DS_Store
+
+# Logs
+npm-debug.log*
+
+# Build folders
+dist/
+build/
