@@ -351,10 +351,10 @@ function App() {
 
   // Products data
   const products = [
-  { name: 'Chocolate Chip Cookies', description: 'Classic cookies with rich chocolate chips', price: 120, image: 'cookies5.jpg' },
-  { name: 'Matcha Cookies', description: 'Premium green tea flavored cookies', price: 180, image: 'matcha.jpg' },
-  { name: 'Double Chocolate Cookies', description: 'Extra chocolatey with cocoa and chips', price: 250, image: 'double_choco.jpg' },
-  { name: 'Oatmeal Raisin Cookies', description: 'Healthy and delicious oat cookies', price: 90, image: 'oatmeal.jpg' }
+  { name: 'Chocolate Chip Cookies', description: 'Classic cookies with rich chocolate chips', price: 120, image: 'C:\Users\Admin\.vscode\IAS FINALS\ECOMM\COOKIESbyTINTIN\cookie-ni-tintin\src\cookie\chocolate chip cookie.jpg' },
+  { name: 'Matcha Cookies', description: 'Premium green tea flavored cookies', price: 180, image: 'C:\Users\Admin\.vscode\IAS FINALS\ECOMM\COOKIESbyTINTIN\cookie-ni-tintin\src\cookie\matcha cookie.jpg' },
+  { name: 'Double Chocolate Cookies', description: 'Extra chocolatey with cocoa and chips', price: 250, image: 'C:\Users\Admin\.vscode\IAS FINALS\ECOMM\COOKIESbyTINTIN\cookie-ni-tintin\src\cookie\double chocolate cookie.jpg' },
+  { name: 'Oatmeal Raisin Cookies', description: 'Healthy and delicious oat cookies', price: 90, image: 'C:\Users\Admin\.vscode\IAS FINALS\ECOMM\COOKIESbyTINTIN\cookie-ni-tintin\src\cookie\oatmeal raisin cookie.jpg' }
 ];
 
 
