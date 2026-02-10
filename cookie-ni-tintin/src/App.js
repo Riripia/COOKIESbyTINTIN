@@ -11,7 +11,13 @@ import { register, login, fetchProducts, createOrder } from './api';
 function Header() {
   return (
     <header>
-      <h1>Cookie ni Tintin</h1>
+      <h1 style={{background: 'none', marginBottom: 0, padding: 0}}>
+        <img 
+          src="/cookie/title white2.png" 
+          alt="Cookie ni Tintin" 
+          style={{maxWidth: '500px', width: '100%', height: 'auto', display: 'block', margin: '0 auto'}} 
+        />
+      </h1>
       <p>Freshly baked Cookies made with love</p>
     </header>
   );
@@ -611,14 +617,13 @@ function App() {
         onLogout={handleLogout}
         onCartClick={handleCartClick}
       />
-      
       <Hero />
       <Menu products={products} onOrderClick={addToCart} />
       <About />
       <Contact />
       <Footer />
 
-      {/* Alert Modal */}
+      {/* Alert Modal comes before Login Modal if both are active */}
       {showAlertModal && (
         <AlertModal 
           title={alertData.title}
@@ -640,8 +645,8 @@ function App() {
         />
       )}
 
-      {/* Login Modal */}
-      {showLoginModal && (
+      {/* Login Modal, only show if alert is not active */}
+      {showLoginModal && !showAlertModal && (
         <LoginModal 
           onClose={() => setShowLoginModal(false)}
           onLogin={handleLogin}
