@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { register, login, fetchProducts, createOrder } from './api';
 
 // ============================================
 // COMPONENT DEFINITIONS (Define before use)
@@ -350,12 +351,14 @@ function App() {
   const [alertData, setAlertData] = useState({ title: 'Alert', message: '' });
 
   // Products data
-  const products = [
-  { name: 'Chocolate Chip Cookies', description: 'Classic cookies with rich chocolate chips', price: 120, image: 'C:\Users\Admin\.vscode\IAS FINALS\ECOMM\COOKIESbyTINTIN\cookie-ni-tintin\src\cookie\chocolate chip cookie.jpg' },
-  { name: 'Matcha Cookies', description: 'Premium green tea flavored cookies', price: 180, image: 'C:\Users\Admin\.vscode\IAS FINALS\ECOMM\COOKIESbyTINTIN\cookie-ni-tintin\src\cookie\matcha cookie.jpg' },
-  { name: 'Double Chocolate Cookies', description: 'Extra chocolatey with cocoa and chips', price: 250, image: 'C:\Users\Admin\.vscode\IAS FINALS\ECOMM\COOKIESbyTINTIN\cookie-ni-tintin\src\cookie\double chocolate cookie.jpg' },
-  { name: 'Oatmeal Raisin Cookies', description: 'Healthy and delicious oat cookies', price: 90, image: 'C:\Users\Admin\.vscode\IAS FINALS\ECOMM\COOKIESbyTINTIN\cookie-ni-tintin\src\cookie\oatmeal raisin cookie.jpg' }
-];
+  const [products, setProducts] = useState([]);
+
+  // Fetch products on mount
+  useEffect(() => {
+    fetchProducts()
+      .then(res => setProducts(res.data))
+      .catch(err => console.log('Error fetching products:', err));
+  }, []);
 
 
   // Load user and cart on mount
@@ -378,53 +381,29 @@ function App() {
   };
 
   // Handle login
-  const handleLogin = (email, password) => {
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-    
-    if (users.length === 0) {
-      showAlert('No users registered yet. Please register first!', 'No Users');
+  const handleLogin = async (email, password) => {
+    try {
+      const res = await login({ email, password });
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('currentUser', JSON.stringify(res.data.user));
+      setCurrentUser(res.data.user);
+      showAlert('Login successful! Welcome back, ' + res.data.user.username + '!', 'Login Successful');
       setShowLoginModal(false);
-      setShowRegisterModal(true);
-      return;
-    }
-    
-    const emailExists = users.find(u => u.email === email);
-    if (!emailExists) {
-      showAlert('Email not found! Please register first.', 'Email Not Found');
-      setShowLoginModal(false);
-      setShowRegisterModal(true);
-      return;
-    }
-    
-    const user = users.find(u => u.email === email && u.password === password);
-
-    if (user) {
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      setCurrentUser(user);
-      showAlert('Login successful! Welcome back, ' + user.username + '!', 'Login Successful');
-      setShowLoginModal(false);
-    } else {
-      showAlert('Wrong password!', 'Error');
+    } catch (error) {
+      showAlert(error.response?.data?.message || 'Login failed', 'Error');
     }
   };
 
   // Handle register
-  const handleRegister = (username, email, password) => {
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-    const existingUser = users.find(u => u.email === email);
-
-    if (existingUser) {
-      showAlert('Email already registered!', 'Registration Error');
-      return;
+  const handleRegister = async (username, email, password) => {
+    try {
+      await register({ username, email, password });
+      showAlert('Registration successful! Please login.', 'Registration Successful');
+      setShowRegisterModal(false);
+      setShowLoginModal(true);
+    } catch (error) {
+      showAlert(error.response?.data?.message || 'Registration failed', 'Registration Error');
     }
-
-    const newUser = { username, email, password };
-    users.push(newUser);
-    localStorage.setItem('users', JSON.stringify(users));
-
-    showAlert('Registration successful! Please login.', 'Registration Successful');
-    setShowRegisterModal(false);
-    setShowLoginModal(true);
   };
 
   // Handle logout
@@ -485,21 +464,22 @@ function App() {
   };
 
   // Handle checkout
-  const handleCheckout = (customerData) => {
-    const orderData = {
-      customer: customerData,
-      items: cart,
-      total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-      orderDate: new Date().toISOString()
-    };
+  const handleCheckout = async (customerData) => {
+    try {
+      const orderData = {
+        customer: customerData,
+        items: cart,
+        total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+        user: currentUser?.id
+      };
 
-    const orders = JSON.parse(localStorage.getItem('orders')) || [];
-    orders.push(orderData);
-    localStorage.setItem('orders', JSON.stringify(orders));
-
-    setCart([]);
-    showAlert('Order placed successfully! Thank you for your purchase.', 'Order Confirmed');
-    setShowCheckoutModal(false);
+      await createOrder(orderData);
+      setCart([]);
+      showAlert('Order placed successfully! Thank you for your purchase.', 'Order Confirmed');
+      setShowCheckoutModal(false);
+    } catch (error) {
+      showAlert('Failed to place order', 'Error');
+    }
   };
 
   // Calculate totals
