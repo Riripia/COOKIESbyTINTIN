@@ -13,9 +13,18 @@ const products = [
 
 const seedProducts = async () => {
   try {
+    console.log('Connecting to MongoDB...');
     await mongoose.connect(process.env.MONGO_URI);
+    console.log('Connected!');
+    const beforeCount = await Product.countDocuments();
+    console.log('Products in DB before delete:', beforeCount);
     await Product.deleteMany(); // Clear existing
-    await Product.insertMany(products);
+    const afterDeleteCount = await Product.countDocuments();
+    console.log('Products in DB after delete:', afterDeleteCount);
+    const inserted = await Product.insertMany(products);
+    console.log('Inserted products:', inserted);
+    const afterInsertCount = await Product.countDocuments();
+    console.log('Products in DB after insert:', afterInsertCount);
     console.log('Products seeded successfully');
     process.exit();
   } catch (error) {
