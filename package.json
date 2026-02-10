@@ -27,6 +27,7 @@
     "react-app-rewired": "^2.2.1"
   },
   "scripts": {
+    "start": "react-scripts start",
     "backend": "nodemon --cwd backend server.js",
     "client": "react-scripts start",
     "dev": "concurrently \"npm run backend\" \"npm run client\""

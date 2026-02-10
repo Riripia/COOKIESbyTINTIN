@@ -11,12 +11,8 @@ import { register, login, fetchProducts, createOrder } from './api';
 function Header() {
   return (
     <header>
-      <h1 style={{background: 'none', marginBottom: 0, padding: 0}}>
-        <img 
-          src="/cookie/title white2.png" 
-          alt="Cookie ni Tintin" 
-          style={{maxWidth: '500px', width: '100%', height: 'auto', display: 'block', margin: '0 auto'}} 
-        />
+      <h1 className="headerTitle">
+        <img src="/cookie/tintinCookies.png" alt="Tintin Cookies" style={{maxWidth: '500px', width: '100%', height: 'auto', display: 'block', margin: '0 auto'}} />
       </h1>
       <p>Freshly baked Cookies made with love</p>
     </header>
