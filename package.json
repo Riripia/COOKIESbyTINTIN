@@ -1,21 +1,33 @@
 {
   "name": "cookies-backend",
-  "version": "0.1.0", 
-"private": true, 
-"type": "module", 
-"dependencies": { 
-"cors": "^2.8.5", 
-"dotenv": "^17.2.3", 
-"express": "^5.1.0", 
-"mongoose": "^8.20.0" 
-}, 
-"devDependencies": { 
-"concurrently": "^8.2.2", 
-"nodemon": "^3.0.1" 
-}, 
-"scripts": { 
-"backend": "nodemon --cwd backend server.js", 
-"client": "react-scripts start", 
-"dev": "concurrently \"npm run backend\" \"npm run client\"" 
-} 
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "assert": "^2.1.0",
+    "axios": "^1.13.5",
+    "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
+    "cors": "^2.8.5",
+    "crypto-browserify": "^3.12.1",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "https-browserify": "^1.0.0",
+    "mongoose": "^8.20.0",
+    "process": "^0.11.10",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "url": "^0.11.4",
+    "util": "^0.12.5"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.0.1",
+    "react-app-rewired": "^2.2.1"
+  },
+  "scripts": {
+    "backend": "nodemon --cwd backend server.js",
+    "client": "react-scripts start",
+    "dev": "concurrently \"npm run backend\" \"npm run client\""
+  }
 }
