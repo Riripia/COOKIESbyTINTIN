@@ -1,0 +1,5 @@
+body { font-family: Arial; background:#f4f4f4; }
+.admin-box { max-width:400px; margin:auto; padding:20px; background:#fff; border-radius:8px; }
+button { background:#d2691e; color:white; padding:10px; border:none; border-radius:5px; cursor:pointer; }
+
+
