@@ -1,7 +1,9 @@
 // App.js
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { register, login, fetchProducts, createOrder } from './api';
+import tintinCookies from './cookie/tintinCookies.png';
+import cookies5 from './cookie/cookies5.jpg';
+import { register, login, fetchProducts, createOrder, fetchOrders } from './api';
 
 // ============================================
 // REUSABLE COMPONENTS
@@ -10,9 +12,9 @@ import { register, login, fetchProducts, createOrder } from './api';
 // Header Component
 function Header() {
   return (
-    <header>
+    <header style={{ backgroundImage: `url(${cookies5})` }}>
       <h1 className="headerTitle">
-        <img src="/cookie/tintinCookies.png" alt="Tintin Cookies" style={{maxWidth: '500px', width: '100%', height: 'auto', display: 'block', margin: '0 auto'}} />
+        <img src={tintinCookies} alt="Tintin Cookies" style={{maxWidth: '500px', width: '100%', height: 'auto', display: 'block', margin: '0 auto'}} />
       </h1>
       <p>Freshly baked Cookies made with love</p>
     </header>
@@ -20,11 +22,14 @@ function Header() {
 }
 
 // Navigation Component
-function Navigation({ currentUser, totalItems, onLoginClick, onRegisterClick, onLogout, onCartClick }) {
+function Navigation({ currentUser, totalItems, onLoginClick, onRegisterClick, onLogout, onCartClick, onOrdersClick }) {
   return (
     <nav>
       <a href="#home">Home</a>
       <a href="#menu">Menu</a>
+      {currentUser && (
+        <a href="#" onClick={e => { e.preventDefault(); onOrdersClick(); }}>Orders</a>
+      )}
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
       <a href="#" onClick={(e) => { e.preventDefault(); onCartClick(); }}>
@@ -56,9 +61,16 @@ function Hero() {
 
 // Product Card Component
 function ProductCard({ product, onOrderClick }) {
+  // Dynamically import images from src/cookie
+  let productImg;
+  try {
+    productImg = require(`./cookie/${product.image}`);
+  } catch (e) {
+    productImg = '';
+  }
   return (
     <div className="card">
-      <img src={`/cookie/${product.image}`} alt={product.name} className="card-image" />
+      <img src={productImg} alt={product.name} className="card-image" />
       <h3>{product.name}</h3>
       <p>{product.description}</p>
       <span className="price">₱{product.price}</span>
@@ -70,19 +82,24 @@ function ProductCard({ product, onOrderClick }) {
 // Menu Component
 function Menu({ products, onOrderClick }) {
   return (
-    <section id="menu">
-      <main className="container">
+    <section id="menu" className="content-section">
+      <div className="container">
         <h2 className="section-title">Our Menu</h2>
-        <div className="products">
-          {products.map((product, index) => (
+        <div className="products-grid" style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+          gap: '2rem',
+          marginTop: '2rem',
+        }}>
+          {products.map((product) => (
             <ProductCard 
-              key={index} 
-              product={product} 
-              onOrderClick={() => onOrderClick(product.name, product.price)} 
+              key={product.id} 
+              product={product}
+              onOrderClick={onOrderClick}
             />
           ))}
         </div>
-      </main>
+      </div>
     </section>
   );
 }
@@ -93,11 +110,7 @@ function About() {
     <section id="about" className="content-section">
       <div className="container">
         <h2 className="section-title">About Us</h2>
-        <div className="about-content">
-          <p>Welcome to Cookie ni Tintin! We're passionate about baking the most delicious, freshly-made cookies that bring joy to every bite.</p>
-          <p>Our cookies are baked daily using only the finest ingredients, ensuring that every batch is perfect. From classic chocolate chip to unique matcha flavors, we have something for everyone.</p>
-          <p>Founded with love and dedication, Cookie ni Tintin has been serving the community with premium quality cookies that create sweet memories for families and friends.</p>
-        </div>
+        <p>Cookies by Tintin has been serving delicious, freshly-baked cookies since 2020. Our mission is to bring joy to every bite with premium ingredients and love in every batch.</p>
       </div>
     </section>
   );
@@ -109,13 +122,7 @@ function Contact() {
     <section id="contact" className="content-section">
       <div className="container">
         <h2 className="section-title">Contact Us</h2>
-        <div className="contact-content">
-          <p><strong>Address:</strong> Quezon City, Metro Manila, Philippines</p>
-          <p><strong>Phone:</strong> +63 123 456 7890</p>
-          <p><strong>Email:</strong> hello@cookienitintin.com</p>
-          <p><strong>Business Hours:</strong></p>
-          <p>Monday - Saturday: 9:00 AM - 8:00 PM<br />Sunday: 10:00 AM - 6:00 PM</p>
-        </div>
+        <p>Email: info@cookiesbytintin.com | Phone: +63 (555) 123-4567</p>
       </div>
     </section>
   );
@@ -125,49 +132,34 @@ function Contact() {
 function Footer() {
   return (
     <footer>
-      © 2026 Cookie ni Tintin. All rights reserved.
+      <p>&copy; 2024 Cookies by Tintin. All rights reserved.</p>
     </footer>
   );
 }
 
-// MODAL COMPONENTS
+// Alert Modal Component
 function AlertModal({ title, message, onClose }) {
   return (
     <div className="modal" style={{ display: 'block' }} onClick={onClose}>
       <div className="modal-content alert-modal-content" onClick={(e) => e.stopPropagation()}>
         <h2>{title}</h2>
         <p className="alert-message">{message}</p>
-        <button onClick={onClose} className="alert-btn">OK</button>
+        <button onClick={onClose} className="alert-btn gradient-btn">OK</button>
       </div>
     </div>
   );
 }
 
+// Confirm Modal Component
 function ConfirmModal({ title, message, onConfirm, onCancel }) {
   return (
     <div className="modal" style={{ display: 'block' }} onClick={onCancel}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <span className="close" onClick={onCancel}>&times;</span>
         <h2>{title}</h2>
         <p>{message}</p>
-        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-          <button 
-            className="alert-btn" 
-            style={{ flex: 1 }}
-            onClick={onConfirm}
-          >
-            Yes
-          </button>
-          <button 
-            className="alert-btn" 
-            style={{ 
-              flex: 1, 
-              background: 'linear-gradient(135deg, #6b7280, #4b5563)' 
-            }}
-            onClick={onCancel}
-          >
-            Cancel
-          </button>
-        </div>
+        <button onClick={onConfirm} className="alert-btn gradient-btn" style={{ marginRight: '0.5rem' }}>Confirm</button>
+        <button onClick={onCancel} className="alert-btn gradient-btn">Cancel</button>
       </div>
     </div>
   );
@@ -213,7 +205,7 @@ function LoginModal({ onClose, onLogin, onSwitchToRegister }) {
   );
 }
 
-// Register Modal Component
+  // Register Modal Component
 function RegisterModal({ onClose, onRegister, onSwitchToLogin }) {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -369,6 +361,7 @@ function CheckoutModal({ total, onClose, onCheckout }) {
 }
 
 // ============================================
+
 // MAIN APP COMPONENT
 // ============================================
 
@@ -421,6 +414,9 @@ function App() {
     }
   ]);
 
+  // User orders state
+  const [orders, setOrders] = useState([]);
+
   // Fetch products from API on mount
   useEffect(() => {
     const loadProducts = async () => {
@@ -439,13 +435,35 @@ function App() {
     loadProducts();
   }, []);
 
-  // Load user and cart from localStorage on mount
+
+  // Load user, cart, and orders from localStorage on mount
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const savedCart = JSON.parse(localStorage.getItem('cart')) || [];
     if (user) setCurrentUser(user);
     setCart(savedCart);
+    // Try to load orders from API if user exists
+    if (user) {
+      loadOrders(user.id);
+    }
   }, []);
+
+  // Fetch orders for the user
+  const loadOrders = async (userId) => {
+    try {
+      // Try to fetch from API
+      const res = await fetchOrders(userId);
+      if (res && res.data) {
+        setOrders(res.data);
+        localStorage.setItem('orders', JSON.stringify(res.data));
+        return;
+      }
+    } catch (error) {
+      // fallback to localStorage
+      const localOrders = JSON.parse(localStorage.getItem('orders')) || [];
+      setOrders(localOrders.filter(o => o.user === userId));
+    }
+  };
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
@@ -466,28 +484,25 @@ function App() {
   // Handle login
   const handleLogin = async (email, password) => {
     try {
-      // Try API first
       const res = await login({ email, password });
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('currentUser', JSON.stringify(res.data.user));
       setCurrentUser(res.data.user);
       showAlert('Login successful! Welcome back, ' + res.data.user.username + '!', 'Login Successful');
       setShowLoginModal(false);
+      loadOrders(res.data.user.id);
     } catch (error) {
-      // Fallback to local storage for demo
-      if (email && password) {
-        const user = {
-          username: email.split('@')[0],
-          email: email,
-          id: Date.now()
-        };
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        setCurrentUser(user);
-        showAlert('Login successful! Welcome, ' + user.username + '!', 'Login Successful');
-        setShowLoginModal(false);
-      } else {
-        showAlert(error.response?.data?.message || 'Login failed. Please try again.', 'Error');
+      let message = 'Login failed. Please try again.';
+      if (error.response) {
+        if (error.response.status === 400) {
+          message = error.response.data?.message || 'Invalid credentials. Please check your email and password.';
+        } else if (error.response.status === 404) {
+          message = 'User not found. Please register first.';
+        } else if (error.response.data?.message) {
+          message = error.response.data.message;
+        }
       }
+      showAlert(message, 'Error');
     }
   };
 
@@ -572,28 +587,26 @@ function App() {
   // Handle checkout
   const handleCheckout = async (customerData) => {
     try {
+      // Only allow order if user is a real MongoDB user (24 hex chars)
+      const userId = currentUser?.id;
+      if (!userId || typeof userId !== 'string' || !/^[a-fA-F0-9]{24}$/.test(userId)) {
+        showAlert('You must be logged in with a real account to place an order.', 'Order Failed');
+        return;
+      }
       const orderData = {
         customer: customerData,
         items: cart,
         total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-        user: currentUser?.id
+        user: userId
       };
 
-      // Try API first
       await createOrder(orderData);
       setCart([]);
       showAlert('Order placed successfully! Thank you for your purchase.', 'Order Confirmed');
       setShowCheckoutModal(false);
+      loadOrders(userId);
     } catch (error) {
-      // Fallback for demo
-      console.log('Order created (demo):', {
-        customer: customerData,
-        items: cart,
-        total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-        orderId: 'DEMO-' + Date.now()
-      });
-      setCart([]);
-      showAlert('Order placed successfully! (Demo Mode) Thank you for your purchase.', 'Order Confirmed');
+      showAlert('Order could not be placed. Please try again later.', 'Order Failed');
       setShowCheckoutModal(false);
     }
   };
@@ -601,6 +614,16 @@ function App() {
   // Calculate totals
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+  // Ref for orders section
+  const ordersSectionRef = React.useRef(null);
+
+  // Scroll to orders section
+  const handleOrdersClick = () => {
+    if (ordersSectionRef.current) {
+      ordersSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="App">
@@ -612,9 +635,38 @@ function App() {
         onRegisterClick={() => setShowRegisterModal(true)}
         onLogout={handleLogout}
         onCartClick={handleCartClick}
+        onOrdersClick={handleOrdersClick}
       />
       <Hero />
       <Menu products={products} onOrderClick={addToCart} />
+      {/* Order History Section */}
+      {currentUser && (
+        <section ref={ordersSectionRef} className="content-section" style={{ background: '#f9fafb', padding: '2rem 0' }}>
+          <div className="container">
+            <h2 className="section-title">Your Orders</h2>
+            {orders.length === 0 ? (
+              <p>You have not placed any orders yet.</p>
+            ) : (
+              <div className="order-history">
+                {orders.map((order, idx) => (
+                  <div key={order.orderId || order._id || idx} className="order-card" style={{ border: '1px solid #e5e7eb', borderRadius: '8px', marginBottom: '1rem', padding: '1rem', background: '#fff' }}>
+                    <div><strong>Order ID:</strong> {order.orderId || order._id || 'N/A'}</div>
+                    <div><strong>Date:</strong> {order.createdAt ? new Date(order.createdAt).toLocaleString() : 'N/A'}</div>
+                    <div><strong>Total:</strong> ₱{order.total}</div>
+                    <div><strong>Items:</strong>
+                      <ul style={{ margin: 0, paddingLeft: '1.2em' }}>
+                        {order.items.map((item, i) => (
+                          <li key={i}>{item.name} x {item.quantity} (₱{item.price} each)</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
       <About />
       <Contact />
       <Footer />
@@ -674,7 +726,10 @@ function App() {
           onRemove={removeFromCart}
           onCheckout={() => {
             if (cart.length === 0) {
-              showAlert('Your cart is empty!', 'Empty Cart');
+              setShowCartModal(false);
+              setTimeout(() => {
+                showAlert('Your cart is empty!', 'Empty Cart');
+              }, 100);
               return;
             }
             setShowCartModal(false);

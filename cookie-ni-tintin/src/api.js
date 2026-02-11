@@ -1,5 +1,5 @@
 // api.js
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'http://localhost:5000';
 
 // Helper function for API calls
 async function apiRequest(endpoint, method = 'GET', data = null) {
@@ -21,12 +21,19 @@ async function apiRequest(endpoint, method = 'GET', data = null) {
 
   try {
     const response = await fetch(`${API_URL}${endpoint}`, config);
-    
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status}`);
+    let responseBody;
+    try {
+      responseBody = await response.json();
+    } catch (e) {
+      responseBody = null;
     }
-    
-    return await response.json();
+    if (!response.ok) {
+      const error = new Error(responseBody?.message || `API Error: ${response.status}`);
+      error.status = response.status;
+      error.response = { status: response.status, data: responseBody };
+      throw error;
+    }
+    return { data: responseBody };
   } catch (error) {
     console.error(`API Request Error (${endpoint}):`, error);
     throw error;
@@ -74,29 +81,40 @@ export const fetchProducts = async () => {
   }
 };
 
+
 export const register = async (userData) => {
   try {
-    return await apiRequest('/auth/register', 'POST', userData);
+    return await apiRequest('/api/auth/register', 'POST', userData);
   } catch (error) {
-    // Mock response for demo
     throw new Error('Registration service unavailable. Using demo mode.');
   }
 };
 
+
 export const login = async (userData) => {
   try {
-    return await apiRequest('/auth/login', 'POST', userData);
+    return await apiRequest('/api/auth/login', 'POST', userData);
   } catch (error) {
-    // Mock response for demo
     throw new Error('Login service unavailable. Using demo mode.');
   }
 };
 
+
 export const createOrder = async (orderData) => {
   try {
-    return await apiRequest('/orders', 'POST', orderData);
+    return await apiRequest('/api/orders', 'POST', orderData);
   } catch (error) {
-    // Mock response for demo
     throw new Error('Order service unavailable. Using demo mode.');
+  }
+};
+
+// Fetch orders for a user
+
+export const fetchOrders = async (userId) => {
+  try {
+    return await apiRequest(`/api/orders?user=${userId}`);
+  } catch (error) {
+    const localOrders = JSON.parse(localStorage.getItem('orders')) || [];
+    return { data: localOrders.filter(o => o.user === userId) };
   }
 };
