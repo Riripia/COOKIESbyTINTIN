@@ -45,39 +45,7 @@ export const fetchProducts = async () => {
   try {
     return await apiRequest('/products');
   } catch (error) {
-    // Return mock data for demo
-    return {
-      data: [
-        {
-          id: 1,
-          name: 'Chocolate Chip Cookies',
-          price: 120,
-          description: 'Classic cookies with rich chocolate chips',
-          image: 'chocolate chip cookie.jpg'
-        },
-        {
-          id: 2,
-          name: 'Matcha Cookies',
-          price: 180,
-          description: 'Premium green tea flavored cookies',
-          image: 'matcha cookie.jpg'
-        },
-        {
-          id: 3,
-          name: 'Double Chocolate Cookies',
-          price: 250,
-          description: 'Extra chocolatey with cocoa and chips',
-          image: 'double chocolate cookie.jpg'
-        },
-        {
-          id: 4,
-          name: 'Oatmeal Raisin Cookies',
-          price: 90,
-          description: 'Healthy and delicious oat cookies',
-          image: 'oatmeal raisin cookie.jpg'
-        }
-      ]
-    };
+    throw new Error('Failed to fetch products from MongoDB. Please try again later.');
   }
 };
 
