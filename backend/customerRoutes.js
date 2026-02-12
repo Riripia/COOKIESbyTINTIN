@@ -20,7 +20,7 @@ router.post('/orders', customerAuth, async (req, res) => {
       return res.status(400).json({ error: 'Order must have items' });
     }
 
-    // Calculate total and validate stock
+    // Calculate total
     let totalAmount = 0;
     const orderItems = [];
 
@@ -28,10 +28,6 @@ router.post('/orders', customerAuth, async (req, res) => {
       const product = await Product.findById(item.productId);
       if (!product) {
         return res.status(404).json({ error: `Product ${item.productId} not found` });
-      }
-
-      if (product.stock < item.quantity) {
-        return res.status(400).json({ error: `Insufficient stock for ${product.name}` });
       }
 
       const subtotal = product.price * item.quantity;
@@ -59,14 +55,6 @@ router.post('/orders', customerAuth, async (req, res) => {
     });
 
     await order.save();
-
-    // Update product stock
-    for (const item of orderItems) {
-      await Product.findByIdAndUpdate(
-        item.productId,
-        { $inc: { stock: -item.quantity } }
-      );
-    }
 
     res.status(201).json({ message: 'Order placed successfully', order });
   } catch (err) {
