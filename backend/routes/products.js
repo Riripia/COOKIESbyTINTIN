@@ -1,7 +1,7 @@
 import express from 'express';
 import Product from '../models/Product.js';
-const multer = require('multer');
-const path = require('path');
+import multer from 'multer';
+import path from 'path';
 
 const router = express.Router();
 
@@ -139,5 +139,3 @@ router.delete('/:id', async (req, res) => {
 });
 
 export default router;
-
-app.use('/uploads', express.static('uploads'));

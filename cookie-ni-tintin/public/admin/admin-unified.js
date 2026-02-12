@@ -97,9 +97,11 @@ async function adminLogin() {
       body: JSON.stringify({ email, password })
     });
 
-    const data = await res.json();
-    
-    if (data.token) {
+    const text = await res.text();
+    let data;
+    try { data = text ? JSON.parse(text) : null; } catch (e) { data = text; }
+
+    if (data && data.token) {
       localStorage.setItem('adminToken', data.token);
       errorDiv.style.display = 'none';
       document.getElementById('email').value = '';
@@ -246,7 +248,9 @@ async function addProduct() {
 async function loadProducts() {
   try {
     const res = await fetch(`${API_BASE}/products`);
-    const products = await res.json();
+    const productsText = await res.text();
+    let products;
+    try { products = productsText ? JSON.parse(productsText) : []; } catch (e) { products = []; }
     
     const tbody = document.getElementById('productsTableBody');
     if (products.length === 0) {
@@ -333,7 +337,9 @@ async function loadOrders() {
     const res = await fetch(`${ADMIN_API}/orders`, {
       headers: getAuthHeaders()
     });
-    const orders = await res.json();
+    const ordersText = await res.text();
+    let orders;
+    try { orders = ordersText ? JSON.parse(ordersText) : []; } catch (e) { orders = []; }
     
     const tbody = document.getElementById('ordersTableBody');
     if (!orders || orders.length === 0) {
@@ -381,7 +387,9 @@ async function loadUsers() {
       throw new Error(`HTTP ${res.status}: Failed to fetch users`);
     }
     
-    const users = await res.json();
+    const usersText = await res.text();
+    let users;
+    try { users = usersText ? JSON.parse(usersText) : []; } catch (e) { users = []; }
     
     const tbody = document.getElementById('usersTableBody');
     if (!users || users.length === 0) {
