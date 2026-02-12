@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Admin Panel - Cookies by TinTin</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div id="admin-login-section" style="display: none;">
+    <div class="admin-login-container">
+      <h2>Admin Login</h2>
+      <p class="admin-subtitle">Cookies by TinTin Admin Panel</p>
+      <div class="admin-box">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="admin@email.com">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" type="password" placeholder="Enter your password">
+        </div>
+        <button class="login-btn" onclick="adminLogin()">Login</button>
+      </div>
+      <p class="footer-text">Admin Access Only - Unauthorized Access Prohibited</p>
+    </div>
+  </div>
+
+  <div id="dashboard-section" class="dashboard-container" style="display: none;">
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+      <h2>Cookies Admin</h2>
+      <ul class="sidebar-menu">
+        <li><button class="menu-btn active" data-section="dashboard">Overview</button></li>
+        <li><button class="menu-btn" data-section="products">Product Management</button></li>
+        <li><button class="menu-btn" data-section="orders">Order Management</button></li>
+        <li><button class="menu-btn" data-section="users">User Management</button></li>
+        <li style="margin-top: 30px; border-top: 1px solid rgba(255, 255, 255, 0.3); padding-top: 20px;">
+          <button class="logout-btn" onclick="adminLogout()" style="width: 100%; text-align: center;">Logout</button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="header">
+            <label for="productImage">Product Image</label>
+            <input type="file" id="productImage" accept="image/*" title="Upload product image">
+      </div>
+
+      <!-- Dashboard Overview -->
+      <div id="dashboard" class="content-section active">
+        <h2>Dashboard Overview</h2>
+        <p style="font-size: 1.1rem; color: #666; line-height: 1.8;">Welcome to the Cookies by TinTin Admin Panel. Manage your products, orders, and customers from here.</p>
+      </div>
+
+      <!-- Product Management -->
+      <div id="products" class="content-section">
+        <h2>Product Management</h2>
+
+        <h3>Add New Product</h3>
+        <div class="form-section">
+          <div class="form-group">
+            <label for="productName">Product Name</label>
+            <input type="text" id="productName" placeholder="e.g., Chocolate Chip Cookies">
+          </div>
+          <div class="form-group">
+            <label for="productDescription">Description</label>
+            <textarea id="productDescription" placeholder="Enter product description"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="productPrice">Price ($)</label>
+            <input type="number" id="productPrice" placeholder="e.g., 9.99" step="0.01">
+          </div>
+          <div class="form-group">
+            <label for="productImage">Product Image</label>
+            <input type="file" id="productImage" accept="image/*" title="Upload product image">
+          </div>
+          <button class="btn btn-primary" onclick="addProduct()">Add Product</button>
+        </div>
+
+        <h3>Products List</h3>
+        <table id="productsTable">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="productsTableBody">
+            <tr><td colspan="4" class="empty-message">No products yet. Add one to get started!</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Order Management -->
+      <div id="orders" class="content-section">
+        <h2>Order Management</h2>
+
+        <table id="ordersTable">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer Name</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTableBody">
+            <tr><td colspan="6" class="empty-message">No orders yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- User Management -->
+      <div id="users" class="content-section">
+        <h2>User Management</h2>
+
+        <table id="usersTable">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody">
+            <tr><td colspan="4" class="empty-message">No users found.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="dashboard.js"></script>
+  <script>
+    // Show login or dashboard based on token
+    function showSection() {
+      const token = localStorage.getItem('adminToken');
+      if (!token) {
+        document.getElementById('admin-login-section').style.display = 'flex';
+        document.getElementById('dashboard-section').style.display = 'none';
+      } else {
+        document.getElementById('admin-login-section').style.display = 'none';
+        document.getElementById('dashboard-section').style.display = 'flex';
+      }
+    }
+    showSection();
+    // After login, reload to show dashboard
+    window.adminLogin = async function() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const res = await fetch('http://localhost:5000/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (data.token) {
+        localStorage.setItem('adminToken', data.token);
+        alert('Login successful!');
+        showSection();
+        location.reload();
+      } else {
+        alert('Login failed: ' + (data.error || 'Unknown error'));
+      }
+    };
+    // Logout handler
+    window.adminLogout = function() {
+      localStorage.removeItem('adminToken');
+      showSection();
+      location.reload();
+    };
+  </script>
+</body>
+</html>
