@@ -22,13 +22,6 @@ export const dashboard = async (req, res) => {
 };
 
 export const addProduct = async (req, res) => {
-<<<<<<< HEAD
-  // If image is already Base64, just save
-  // If image is a file, convert to Base64 before saving (frontend should send Base64)
-  const product = new Product(req.body);
-  await product.save();
-  res.json({ message: 'Product added' });
-=======
   try {
     const product = new Product(req.body);
     await product.save();
@@ -38,20 +31,10 @@ export const addProduct = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
->>>>>>> efbd3a6ee9768b2d2c47f28f2487907b742603cc
 };
 
 export const updateProduct = async (req, res) => {
   try {
-<<<<<<< HEAD
-    const updated = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-    if (!updated) {
-      return res.status(404).json({ error: 'Product not found' });
-    }
-    res.json({ message: 'Product updated', product: updated });
-  } catch (error) {
-    res.status(400).json({ error: error.message || 'Failed to update product' });
-=======
     const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!product) {
       return res.status(404).json({ error: 'Product not found' });
@@ -61,7 +44,6 @@ export const updateProduct = async (req, res) => {
     res.json({ message: 'Product updated', product });
   } catch (error) {
     res.status(500).json({ error: error.message });
->>>>>>> efbd3a6ee9768b2d2c47f28f2487907b742603cc
   }
 };
 

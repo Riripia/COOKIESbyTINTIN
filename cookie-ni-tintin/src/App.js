@@ -98,19 +98,12 @@ function ProductCard({ product, onOrderClick }) {
       productImg = '';
     }
   }
-<<<<<<< HEAD
-  const fallbackImg = 'https://via.placeholder.com/250x250?text=No+Image';
-  return (
-    <div className="card">
-      <img src={productImg || fallbackImg} alt={product.name} className="card-image" />
-=======
 
   return (
     <div className="card">
       <div style={{ position: 'relative', width: '100%' }}>
         <img src={productImg} alt={product.name} className="card-image" />
       </div>
->>>>>>> efbd3a6ee9768b2d2c47f28f2487907b742603cc
       <h3>{product.name}</h3>
       <p>{product.description}</p>
       <span className="price">₱{product.price}</span>
@@ -486,12 +479,6 @@ function App() {
       }
     };
 
-<<<<<<< HEAD
-    loadProducts();
-    // Auto-refresh every 10 seconds
-    const interval = setInterval(loadProducts, 10000);
-    return () => clearInterval(interval);
-=======
     loadInitialProducts();
 
     // Connect to SSE stream for real-time product updates
@@ -537,7 +524,6 @@ function App() {
     };
 
     return () => eventSource.close();
->>>>>>> efbd3a6ee9768b2d2c47f28f2487907b742603cc
   }, []);
 
 
