@@ -3,6 +3,7 @@ import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import Product from '../models/Product.js';
 import Order from '../models/Order.js';
+import { broadcastProductUpdate } from '../routes/products.js';
 
 export const loginAdmin = async (req, res) => {
   const { email, password } = req.body;
@@ -21,19 +22,43 @@ export const dashboard = async (req, res) => {
 };
 
 export const addProduct = async (req, res) => {
-  const product = new Product(req.body);
-  await product.save();
-  res.json({ message: 'Product added' });
+  try {
+    const product = new Product(req.body);
+    await product.save();
+    // Broadcast update to all connected clients
+    broadcastProductUpdate();
+    res.status(201).json({ message: 'Product added', product });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 export const updateProduct = async (req, res) => {
-  await Product.findByIdAndUpdate(req.params.id, req.body);
-  res.json({ message: 'Product updated' });
+  try {
+    const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    // Broadcast update to all connected clients
+    broadcastProductUpdate();
+    res.json({ message: 'Product updated', product });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 export const deleteProduct = async (req, res) => {
-  await Product.findByIdAndDelete(req.params.id);
-  res.json({ message: 'Product deleted' });
+  try {
+    const product = await Product.findByIdAndDelete(req.params.id);
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    // Broadcast update to all connected clients
+    broadcastProductUpdate();
+    res.json({ message: 'Product deleted' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 export const getOrders = async (req, res) => {

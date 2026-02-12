@@ -68,13 +68,20 @@ function ProductCard({ product, onOrderClick }) {
   } catch (e) {
     productImg = '';
   }
+
   return (
     <div className="card">
-      <img src={productImg} alt={product.name} className="card-image" />
+      <div style={{ position: 'relative', width: '100%' }}>
+        <img src={productImg} alt={product.name} className="card-image" />
+      </div>
       <h3>{product.name}</h3>
       <p>{product.description}</p>
       <span className="price">₱{product.price}</span>
-      <button onClick={() => onOrderClick(product.name, product.price)}>Order Now</button>
+      <button 
+        onClick={() => onOrderClick(product.name, product.price)}
+      >
+        Order Now
+      </button>
     </div>
   );
 }
@@ -417,22 +424,64 @@ function App() {
   // User orders state
   const [orders, setOrders] = useState([]);
 
-  // Fetch products from API on mount
+  // Connect to SSE product stream and fetch initial products on mount
   useEffect(() => {
-    const loadProducts = async () => {
+    const loadInitialProducts = async () => {
       try {
-        // Try to fetch from API first
         const res = await fetchProducts();
         if (res && res.data) {
           setProducts(res.data);
         }
       } catch (error) {
         console.log('Using default products:', error.message);
-        // Use default products if API fails
       }
     };
-    
-    loadProducts();
+
+    loadInitialProducts();
+
+    // Connect to SSE stream for real-time product updates
+    const eventSource = new EventSource('http://localhost:5000/api/products/stream');
+
+    eventSource.onmessage = async (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        
+        if (data.type === 'initial') {
+          // Initial product data from SSE connection
+          console.log('Received initial products via SSE');
+          setProducts(data.products || []);
+        } else if (data.type === 'products-updated') {
+          // Product was modified - use data directly from broadcast
+          console.log('Product update broadcast received, updating menu');
+          setProducts(data.products || []);
+        } else if (data.type === 'update') {
+          // Legacy update signal - fetch fresh data
+          const res = await fetchProducts();
+          if (res && res.data) {
+            setProducts(res.data);
+          }
+        }
+      } catch (e) {
+        console.log('SSE parse error:', e.message);
+      }
+    };
+
+    eventSource.onerror = () => {
+      console.log('SSE connection lost, falling back to polling');
+      // Fallback: Resume polling if SSE fails
+      const interval = setInterval(async () => {
+        try {
+          const res = await fetchProducts();
+          if (res && res.data) setProducts(res.data);
+        } catch (e) {
+          // ignore fallback errors
+        }
+      }, 30000); // every 30s
+      
+      return () => clearInterval(interval);
+    };
+
+    return () => eventSource.close();
   }, []);
 
 
@@ -447,6 +496,16 @@ function App() {
       loadOrders(user.id);
     }
   }, []);
+
+  // Poll orders for the logged-in user so status updates are reflected
+  useEffect(() => {
+    if (!currentUser) return;
+    const interval = setInterval(() => {
+      loadOrders(currentUser.id);
+    }, 10000); // every 10s
+
+    return () => clearInterval(interval);
+  }, [currentUser]);
 
   // Fetch orders for the user
   const loadOrders = async (userId) => {
