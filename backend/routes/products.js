@@ -1,7 +1,20 @@
 import express from 'express';
 import Product from '../models/Product.js';
+const multer = require('multer');
+const path = require('path');
 
 const router = express.Router();
+
+// Configure storage for uploaded images
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Make sure this folder exists
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+const upload = multer({ storage: storage });
 
 // Store connected SSE clients
 const productStreamClients = new Set();
@@ -74,34 +87,37 @@ router.get('/', async (req, res) => {
 });
 
 // Add product (admin only)
-router.post('/', async (req, res) => {
+router.post('/product', upload.single('image'), async (req, res) => {
   try {
-    const product = new Product(req.body);
+    const { name, description, price } = req.body;
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+
+    // Save product with imageUrl
+    const product = new Product({
+      name,
+      description,
+      price,
+      image: imageUrl
+    });
     await product.save();
-    
-    // Broadcast update to all connected clients
-    broadcastProductUpdate();
-    
     res.status(201).json(product);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
 // Update product (admin only)
-router.put('/:id', async (req, res) => {
+router.put('/product/:id', upload.single('image'), async (req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+    const { name, description, price } = req.body;
+    const updateData = { name, description, price };
+    if (req.file) {
+      updateData.image = `/uploads/${req.file.filename}`;
     }
-    
-    // Broadcast update to all connected clients
-    broadcastProductUpdate();
-    
+    const product = await Product.findByIdAndUpdate(req.params.id, updateData, { new: true });
     res.json(product);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -123,3 +139,5 @@ router.delete('/:id', async (req, res) => {
 });
 
 export default router;
+
+app.use('/uploads', express.static('uploads'));

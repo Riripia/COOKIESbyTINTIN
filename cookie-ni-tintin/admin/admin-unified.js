@@ -128,12 +128,20 @@ async function addProduct() {
   const name = document.getElementById('productName').value;
   const description = document.getElementById('productDescription').value;
   const price = document.getElementById('productPrice').value;
-  const image = document.getElementById('productImage').value;
+  const imageInput = document.getElementById('productImage');
 
-  if (!name || !description || !price || !image) {
+  if (!name || !description || !price || !imageInput.files.length) {
     alert('Please fill in all required fields');
     return;
   }
+
+  // Use FormData for file upload
+  const file = imageInput.files[0];
+  const formData = new FormData();
+  formData.append('name', name);
+  formData.append('description', description);
+  formData.append('price', parseFloat(price));
+  formData.append('image', file);
 
   try {
     const url = editingProductId 
@@ -143,13 +151,10 @@ async function addProduct() {
 
     const res = await fetch(url, {
       method: method,
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ 
-        name, 
-        description, 
-        price: parseFloat(price), 
-        image 
-      })
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+      },
+      body: formData
     });
 
     if (res.ok) {
@@ -157,7 +162,7 @@ async function addProduct() {
       document.getElementById('productName').value = '';
       document.getElementById('productDescription').value = '';
       document.getElementById('productPrice').value = '';
-      document.getElementById('productImage').value = '';
+      imageInput.value = '';
       editingProductId = null;
       document.querySelector('.btn-primary').textContent = 'Add Product';
       loadProducts();
@@ -231,7 +236,8 @@ function cancelEdit() {
 }
 
 async function deleteProduct(productId) {
-  if (!confirm('Are you sure you want to delete this product?')) return;
+  const confirmed = await showConfirmDialog('Are you sure you want to delete this product?');
+  if (!confirmed) return;
 
   try {
     const res = await fetch(`${ADMIN_API}/product/${productId}`, {
@@ -358,7 +364,8 @@ async function loadUsers() {
 }
 
 async function removeUser(userId) {
-  if (!confirm('Are you sure you want to remove this user?')) return;
+  const confirmed = await showConfirmDialog('Are you sure you want to remove this user?');
+  if (!confirmed) return;
 
   try {
     const res = await fetch(`${API_BASE}/users/${userId}`, {
@@ -381,8 +388,9 @@ async function removeUser(userId) {
    LOGOUT
 ========================================== */
 
-function adminLogout() {
-  if (confirm('Are you sure you want to logout?')) {
+async function adminLogout() {
+  const confirmed = await showConfirmDialog('Are you sure you want to logout?');
+  if (confirmed) {
     localStorage.removeItem('adminToken');
     showLogin();
     // Clear form fields
@@ -392,10 +400,50 @@ function adminLogout() {
   }
 }
 
+function showConfirmDialog(message) {
+  return new Promise((resolve) => {
+    const dialog = document.createElement('div');
+    dialog.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:20px;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);z-index:10000;min-width:300px;';
+    dialog.innerHTML = `
+      <p style="margin:0 0 20px 0;font-size:16px;">${message}</p>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button id="confirmNo" style="padding:8px 16px;border:1px solid #ccc;border-radius:4px;background:#f3f4f6;cursor:pointer;">Cancel</button>
+        <button id="confirmYes" style="padding:8px 16px;border:none;border-radius:4px;background:#3b82f6;color:white;cursor:pointer;">Confirm</button>
+      </div>
+    `;
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;';
+    
+    document.body.appendChild(overlay);
+    document.body.appendChild(dialog);
+    
+    document.getElementById('confirmYes').addEventListener('click', () => {
+      overlay.remove();
+      dialog.remove();
+      resolve(true);
+    });
+    document.getElementById('confirmNo').addEventListener('click', () => {
+      overlay.remove();
+      dialog.remove();
+      resolve(false);
+    });
+  });
+}
+
 /* ==========================================
    INITIALIZE APP ON PAGE LOAD
 ========================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
   initializeApp();
+  // Export functions globally for HTML access
+  window.adminLogin = adminLogin;
+  window.addProduct = addProduct;
+  window.editProductData = editProductData;
+  window.cancelEdit = cancelEdit;
+  window.deleteProduct = deleteProduct;
+  window.updateOrderStatus = updateOrderStatus;
+  window.viewOrderDetails = viewOrderDetails;
+  window.removeUser = removeUser;
+  window.adminLogout = adminLogout;
 });

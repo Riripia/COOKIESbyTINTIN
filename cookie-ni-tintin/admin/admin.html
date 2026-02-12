@@ -477,8 +477,8 @@
               <input type="number" id="productPrice" placeholder="e.g., 9.99" step="0.01">
             </div>
             <div class="form-group">
-              <label>Image URL</label>
-              <input type="text" id="productImage" placeholder="Enter image URL">
+              <label for="productImage">Product Image</label>
+              <input type="file" id="productImage" accept="image/*" title="Upload product image">
             </div>
             <div style="display: flex; gap: 10px;">
               <button class="btn btn-primary" onclick="addProduct()">Add Product</button>
