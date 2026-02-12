@@ -65,3 +65,4 @@ export const getOrders = async (req, res) => {
   const orders = await Order.find();
   res.json(orders);
 };
+

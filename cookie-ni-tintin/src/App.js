@@ -28,21 +28,47 @@ function Navigation({ currentUser, totalItems, onLoginClick, onRegisterClick, on
       <a href="#home">Home</a>
       <a href="#menu">Menu</a>
       {currentUser && (
-        <a href="#" onClick={e => { e.preventDefault(); onOrdersClick(); }}>Orders</a>
+        <a
+          href="#"
+          className="link-button"
+          onClick={e => { e.preventDefault(); onOrdersClick(); }}
+          tabIndex={0}
+          rel="noopener noreferrer"
+        >Orders</a>
       )}
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
-      <a href="#" onClick={(e) => { e.preventDefault(); onCartClick(); }}>
-        Cart ({totalItems})
-      </a>
+      <a
+        href="#"
+        className="link-button"
+        onClick={e => { e.preventDefault(); onCartClick(); }}
+        tabIndex={0}
+        rel="noopener noreferrer"
+      >Cart ({totalItems})</a>
       {currentUser ? (
-        <a href="#" onClick={(e) => { e.preventDefault(); onLogout(); }}>
-          Welcome, {currentUser.username}
-        </a>
+        <a
+          href="#"
+          className="link-button"
+          onClick={e => { e.preventDefault(); onLogout(); }}
+          tabIndex={0}
+          rel="noopener noreferrer"
+        >Welcome, {currentUser.username}</a>
       ) : (
         <>
-          <a href="#" onClick={(e) => { e.preventDefault(); onLoginClick(); }}>Login</a>
-          <a href="#" onClick={(e) => { e.preventDefault(); onRegisterClick(); }}>Register</a>
+          <a
+            href="#"
+            className="link-button"
+            onClick={e => { e.preventDefault(); onLoginClick(); }}
+            tabIndex={0}
+            rel="noopener noreferrer"
+          >Login</a>
+          <a
+            href="#"
+            className="link-button"
+            onClick={e => { e.preventDefault(); onRegisterClick(); }}
+            tabIndex={0}
+            rel="noopener noreferrer"
+          >Register</a>
         </>
       )}
     </nav>
@@ -61,12 +87,16 @@ function Hero() {
 
 // Product Card Component
 function ProductCard({ product, onOrderClick }) {
-  // Dynamically import images from src/cookie
-  let productImg;
-  try {
-    productImg = require(`./cookie/${product.image}`);
-  } catch (e) {
-    productImg = '';
+  // Show Base64 image if present, else fallback to filename
+  let productImg = '';
+  if (product.image && product.image.startsWith('data:image')) {
+    productImg = product.image;
+  } else if (product.image) {
+    try {
+      productImg = require(`./cookie/${product.image}`);
+    } catch (e) {
+      productImg = '';
+    }
   }
 
   return (
@@ -204,7 +234,13 @@ function LoginModal({ onClose, onLogin, onSwitchToRegister }) {
           />
           <button type="submit">Login</button>
           <p className="modal-message">
-            No account yet? <a href="#" onClick={(e) => { e.preventDefault(); onSwitchToRegister(); }}>Register here</a>
+            No account yet? <a
+              href="#"
+              className="link-button"
+              onClick={e => { e.preventDefault(); onSwitchToRegister(); }}
+              tabIndex={0}
+              rel="noopener noreferrer"
+            >Register here</a>
           </p>
         </form>
       </div>
@@ -252,7 +288,13 @@ function RegisterModal({ onClose, onRegister, onSwitchToLogin }) {
           />
           <button type="submit">Register</button>
           <p className="modal-message">
-            Already have an account? <a href="#" onClick={(e) => { e.preventDefault(); onSwitchToLogin(); }}>Login here</a>
+            Already have an account? <a
+              href="#"
+              className="link-button"
+              onClick={e => { e.preventDefault(); onSwitchToLogin(); }}
+              tabIndex={0}
+              rel="noopener noreferrer"
+            >Login here</a>
           </p>
         </form>
       </div>
