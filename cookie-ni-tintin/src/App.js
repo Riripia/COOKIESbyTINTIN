@@ -752,7 +752,7 @@ function App() {
                 {orders.map((order, idx) => (
                   <div key={order.orderId || order._id || idx} className="order-card" style={{ border: '1px solid #e5e7eb', borderRadius: '8px', marginBottom: '1rem', padding: '1rem', background: '#fff' }}>
                     <div><strong>Order ID:</strong> {order.orderId || order._id || 'N/A'}</div>
-                    <div><strong>Date:</strong> {order.createdAt ? new Date(order.createdAt).toLocaleString() : 'N/A'}</div>
+                    <div><strong>Date:</strong> {order.orderDate ? new Date(order.orderDate).toLocaleString() : (order.createdAt ? new Date(order.createdAt).toLocaleString() : 'N/A')}</div>
                     <div><strong>Total:</strong> ₱{order.total}</div>
                     <div><strong>Items:</strong>
                       <ul style={{ margin: 0, paddingLeft: '1.2em' }}>
