@@ -62,7 +62,12 @@ export const deleteProduct = async (req, res) => {
 };
 
 export const getOrders = async (req, res) => {
-  const orders = await Order.find();
-  res.json(orders);
+  try {
+    // Return all fields for each order
+    const orders = await Order.find({}, '-__v').lean();
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 

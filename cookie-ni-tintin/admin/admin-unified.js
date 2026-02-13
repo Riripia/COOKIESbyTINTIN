@@ -321,7 +321,9 @@ async function updateOrderStatus(orderId, status) {
 }
 
 function viewOrderDetails(orderId) {
-  alert('Order details for: ' + orderId);
+  alert('Order ID: ' + orderId);
+}
+}
 }
 
 /* ==========================================
